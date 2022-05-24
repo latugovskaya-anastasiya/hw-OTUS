@@ -11,6 +11,7 @@ import (
 var ErrInvalidString = errors.New("invalid string")
 var nilStr string
 
+// Unpack function unpacks the string with repeating characters.
 func Unpack(s string) (string, error) {
 	in := []rune(s)
 
