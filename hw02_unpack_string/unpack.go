@@ -7,9 +7,11 @@ import (
 	"unicode"
 )
 
-// ErrInvalidString error is returned if an invalid string is entered.
-var ErrInvalidString = errors.New("invalid string")
-var nilStr string
+var (
+	// ErrInvalidString error is returned if an invalid string is entered.
+	ErrInvalidString = errors.New("invalid string")
+	nilStr           string
+)
 
 // Unpack function unpacks the string with repeating characters.
 func Unpack(s string) (string, error) {
