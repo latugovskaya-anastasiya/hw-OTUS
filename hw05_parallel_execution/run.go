@@ -8,7 +8,7 @@ var ErrErrorsLimitExceeded = errors.New("errors limit exceeded")
 
 type Task func() error
 
-// Run starts tasks in n goroutines and stops its work when receiving m errors from tasks.
+//nolint:gocognit //Run starts tasks in n goroutines and stops its work when receiving m errors from tasks.
 func Run(tasks []Task, n, m int) error {
 	// Place your code here.
 	resChan := make(chan error)
@@ -56,7 +56,6 @@ func Run(tasks []Task, n, m int) error {
 			}
 			if failures >= m && waitList <= 0 {
 				errOverload = ErrErrorsLimitExceeded
-				graceful = true
 				isRunning = false
 				close(resChan)
 				close(jobChan)
