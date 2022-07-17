@@ -10,48 +10,93 @@ import (
 )
 
 func TestCache(t *testing.T) {
-	t.Run("empty cache", func(t *testing.T) {
-		c := NewCache(10)
+	t.Run(
+		"empty cache", func(t *testing.T) {
+			c := NewCache(10)
 
-		_, ok := c.Get("aaa")
-		require.False(t, ok)
+			_, ok := c.Get("aaa")
+			require.False(t, ok)
 
-		_, ok = c.Get("bbb")
-		require.False(t, ok)
-	})
+			_, ok = c.Get("bbb")
+			require.False(t, ok)
+		},
+	)
 
-	t.Run("simple", func(t *testing.T) {
-		c := NewCache(5)
+	t.Run(
+		"simple", func(t *testing.T) {
+			c := NewCache(5)
 
-		wasInCache := c.Set("aaa", 100)
-		require.False(t, wasInCache)
+			wasInCache := c.Set("aaa", 100)
+			require.False(t, wasInCache)
 
-		wasInCache = c.Set("bbb", 200)
-		require.False(t, wasInCache)
+			wasInCache = c.Set("bbb", 200)
+			require.False(t, wasInCache)
 
-		val, ok := c.Get("aaa")
-		require.True(t, ok)
-		require.Equal(t, 100, val)
+			val, ok := c.Get("aaa")
+			require.True(t, ok)
+			require.Equal(t, 100, val)
 
-		val, ok = c.Get("bbb")
-		require.True(t, ok)
-		require.Equal(t, 200, val)
+			val, ok = c.Get("bbb")
+			require.True(t, ok)
+			require.Equal(t, 200, val)
 
-		wasInCache = c.Set("aaa", 300)
-		require.True(t, wasInCache)
+			wasInCache = c.Set("aaa", 300)
+			require.True(t, wasInCache)
 
-		val, ok = c.Get("aaa")
-		require.True(t, ok)
-		require.Equal(t, 300, val)
+			val, ok = c.Get("aaa")
+			require.True(t, ok)
+			require.Equal(t, 300, val)
 
-		val, ok = c.Get("ccc")
-		require.False(t, ok)
-		require.Nil(t, val)
-	})
+			val, ok = c.Get("ccc")
+			require.False(t, ok)
+			require.Nil(t, val)
+		},
+	)
 
-	t.Run("purge logic", func(t *testing.T) {
-		// Write me
-	})
+	t.Run(
+		"purge logic1", func(t *testing.T) {
+			c := NewCache(3)
+			wasInCache := c.Set("a", 100)
+			require.False(t, wasInCache)
+
+			wasInCache = c.Set("b", 200)
+			require.False(t, wasInCache)
+
+			wasInCache = c.Set("c", 300)
+			require.False(t, wasInCache)
+
+			val, ok := c.Get("b")
+			require.True(t, ok)
+			require.Equal(t, 200, val)
+
+			val2, ok2 := c.Get("c")
+			require.True(t, ok2)
+			require.Equal(t, 300, val2)
+
+			val3, ok3 := c.Get("a")
+			require.True(t, ok3)
+			require.Equal(t, 100, val3)
+
+			wasInCache = c.Set("d", 400)
+			require.False(t, wasInCache)
+
+			val4, ok4 := c.Get("b")
+			require.False(t, ok4)
+			require.Nil(t, val4)
+		},
+	)
+	t.Run(
+		"purge logic2", func(t *testing.T) {
+			c := NewCache(1)
+			wasInCache := c.Set("a", 200)
+			require.False(t, wasInCache)
+			wasInCache = c.Set("b", 200)
+			require.False(t, wasInCache)
+			val, ok := c.Get("a")
+			require.False(t, ok)
+			require.Nil(t, val)
+		},
+	)
 }
 
 func TestCacheMultithreading(t *testing.T) {
